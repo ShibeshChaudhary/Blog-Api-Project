@@ -1,0 +1,10 @@
+const mongoose=require('mongoose');
+
+const userSchema=new mongoose.Schema({
+    title:{type:String,required:true,unique:true},
+    content:{type:String,required:true},
+    tags:{type:[String],required:true},
+    author:{type:String,required:true},
+
+});
+module.exports=mongoose.model("user",userSchema);
