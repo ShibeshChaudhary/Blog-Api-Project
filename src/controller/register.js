@@ -1,14 +1,17 @@
 const bcrypt = require("bcryptjs");
-const User = require("../models/User"); // <-- your Sequelize model
+const User = require("../models/User");
 
 exports.register = async (req, res) => {
-  const { name, email, password,role } = req.body;
+  const { name, email, password, role } = req.body;
 
   try {
    
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(409).json({ msg: "Email already used" });
+
+       const allowedRoles = ["user", "editor", "admin"];
+    const userRole = allowedRoles.includes(role) ? role : "user";
 
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -18,17 +21,19 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role:role||'user',
+      role: userRole,
     });
 
     res.status(201).json({
       msg: "Signup successful",
       user: {
-        id: newUser.id,
+        id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        role: newUser.role,
       },
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
