@@ -32,6 +32,31 @@ exports.getAllPosts = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+exports.updatePost = async (req, res) => {
+  const postId = req.params.id;
+  const updateData = req.body;
+
+  try {
+    const updatedPost = await post.findByIdAndUpdate(
+      postId,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    res.json({
+      msg: "Post updated successfully",
+      post: updatedPost
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
 
 
 exports.deletePost = async (req, res) => {
