@@ -12,8 +12,8 @@ exports.register = async (req, res) => {
     if (existingUser)
       return res.status(409).json({ msg: "Email already used" });
 
-       const allowedRoles = ["user", "editor", "admin"];
-    const userRole = allowedRoles.includes(role) ? role : "user";
+       const allowedRoles = [ "editor", "admin"];
+    const userRole = allowedRoles.includes(role) ? role : "editor";
 
 
     const hashedPassword = await bcrypt.hash(password, 10);

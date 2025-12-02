@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-exports.verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -10,12 +10,11 @@ exports.verifyToken = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, "secretchibi");
-    req.user = decoded; // id + role
+    const decoded = jwt.verify(token, "secretchibi"); 
     next();
   } catch (err) {
     return res.status(401).json({ msg: "Invalid token" });
   }
 };
 
-module.exports=authorize;
+module.exports = verifyToken;
