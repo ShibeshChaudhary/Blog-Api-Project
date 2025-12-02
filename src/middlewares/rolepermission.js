@@ -1,5 +1,5 @@
 const permissionMap={
-    visitor:['read'],
+    user:['read'],
     editor:['edit','read'],
     admin:['edit','read','manageUser']
 }

@@ -1,16 +1,21 @@
-const jwt=require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
+exports.verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-function authorize(...allowedRoles){
-    return(req,res,next)=>{
-        if(!req.user || !allowedRoles.includes(req.user.role)){
-            return res.status(404).json({msg:"Unauthorize access"})
-        }
-        const allowedActions=permissionMap[role]||[];
-        if(!allowedActions.include[action])
-            return res.status(404).json({message:"You dont have required permission"});
-        next();
-    };
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(403).json({ msg: "No token provided" });
+  }
 
-}
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, "secretchibi");
+    req.user = decoded; // id + role
+    next();
+  } catch (err) {
+    return res.status(401).json({ msg: "Invalid token" });
+  }
+};
+
 module.exports=authorize;
