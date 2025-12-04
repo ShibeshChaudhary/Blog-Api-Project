@@ -38,3 +38,11 @@ exports.getMyProfile = async (req, res) => {
     res.status(500).json({ msg: "Server error" });
   }
 };
+exports.deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ msg: 'User deleted' });
+  } catch (err) {
+    res.status(500).json({ msg: 'Delete failed' });
+  }
+};
